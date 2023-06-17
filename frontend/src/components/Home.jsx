@@ -1,39 +1,35 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Orders } from "./Orders";
+import { useDispatch, useSelector } from "react-redux";
+import { logOutUser } from "../features/user/user";
+import { getOrder } from "../features/order/order";
 
-export const Home = (props) => {
-  const { setUser, user } = props;
+export const Home = () => {
+  const { user } = useSelector((state) => state.user);
+  const { order } = useSelector((state) => state.order);
   const navigate = useNavigate();
   const [add, setAdd] = useState(true);
+  const dispatch = useDispatch();
 
-  const [orders, setOrders] = useState([]);
-
-  console.log("hello")
+  console.log(order);
 
   useEffect(() => {
     if (!user) navigate("/");
-  }, [user]);
+  }, []);
 
   useEffect(() => {
-    if (!user) return;
-    axios
-      .get("http://localhost:8080/order/getorder", {
-        params: { id: user.user.id },
-        headers: { Authorization: `Bearer ${user.token}` },
+    dispatch(
+      getOrder({
+        params: { id: user?.user.id },
+        headers: { Authorization: `Bearer ${user?.token}` },
       })
-      .then((res) => {
-        setOrders(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    );
   }, []);
 
   const handleLogOut = () => {
-    setUser(null);
+    dispatch(logOutUser());
   };
 
   const handleAdd = () => {
@@ -64,8 +60,8 @@ export const Home = (props) => {
             marginBottom: "10px",
           }}
         >
-          {orders?.length ? (
-            orders.map((e) => (
+          {order?.length ? (
+            order.map((e) => (
               <Small key={e._id}>
                 <div>
                   <p>Name:</p>
@@ -82,7 +78,7 @@ export const Home = (props) => {
           )}
         </div>
       ) : (
-        <Orders token={user.token} userId={user.user.id} />
+        <Orders />
       )}
     </Container>
   );

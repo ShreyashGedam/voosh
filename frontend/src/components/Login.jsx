@@ -1,31 +1,27 @@
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { addUser } from "../features/user/user";
 
 export const Login = (props) => {
-  const { setUser, user } = props;
+  // const { setUser, user } = props;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user, error } = useSelector((state) => state.user);
 
   const [err, setErr] = useState(false);
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
 
   const handleClickNormal = async () => {
-    await axios
-      .post("http://localhost:8080/user/loginuser", {
-        phone,
-        password,
-      })
-      .then((res) => {
-        setUser(res.data);
-        navigate("/home");
-      })
-      .catch((err) => {
-        console.log(err);
-        setErr(true);
-      });
+    dispatch(addUser({ phone, password }));
   };
+
+  useEffect(() => {
+    if (user) navigate("/home");
+    if (error) setErr(true);
+  }, [user, error]);
 
   const handleNaviagte = () => {
     navigate("/register");

@@ -1,34 +1,33 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { addOrder } from "../features/order/order";
 
-export const Orders = (props) => {
-  const { token, userId } = props;
+export const Orders = () => {
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const [name, setName] = useState("");
   const [total, setTotal] = useState(0);
 
-  useEffect(() => {}, [name, total]);
+  console.log("hello in order");
 
   const handleClick = () => {
-    axios
-      .post(
-        `http://localhost:8080/order/addorder/${userId}`,
-        {
+    dispatch(
+      addOrder({
+        userId: user.user.id,
+        payload: {
           total,
           order_name: name,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        setName("");
-        setTotal(0);
-        alert("order added successdully");
+        token: {
+          headers: { Authorization: `Bearer ${user.token}` },
+        },
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    );
+    setName("");
+    setTotal(0);
+    alert("order added successfully");
   };
 
   return (

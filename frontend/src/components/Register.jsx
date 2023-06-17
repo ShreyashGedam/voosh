@@ -1,11 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-export const Register = (props) => {
+export const Register = () => {
   const navigate = useNavigate();
-  const { setUser } = props;
   const [invalid, setInvalid] = useState(false);
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
@@ -14,7 +13,7 @@ export const Register = (props) => {
   const handleClickNormal = async () => {
     await axios
       .post("http://localhost:8080/user/adduser", {
-      // .post("https://tiny-jade-swordfish-cape.cyclic.app/user/adduser", {
+        // .post("https://tiny-jade-swordfish-cape.cyclic.app/user/adduser", {
         name,
         phone,
         password,
