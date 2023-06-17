@@ -2,14 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { Orders } from "./Orders";
 
 export const Home = (props) => {
   const { setUser, user } = props;
-
   const navigate = useNavigate();
   const [add, setAdd] = useState(true);
 
   const [orders, setOrders] = useState([]);
+
+  console.log("hello")
 
   useEffect(() => {
     if (!user) navigate("/");
@@ -20,10 +22,10 @@ export const Home = (props) => {
     axios
       .get("http://localhost:8080/order/getorder", {
         params: { id: user.user.id },
+        headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
         setOrders(res.data);
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -62,7 +64,7 @@ export const Home = (props) => {
             marginBottom: "10px",
           }}
         >
-          {orders.length ? (
+          {orders?.length ? (
             orders.map((e) => (
               <Small key={e._id}>
                 <div>
@@ -80,7 +82,7 @@ export const Home = (props) => {
           )}
         </div>
       ) : (
-        <p>Add my order here</p>
+        <Orders token={user.token} userId={user.user.id} />
       )}
     </Container>
   );
@@ -115,6 +117,9 @@ const Name = styled.div`
 `;
 
 const Small = styled.div`
+  border-bottom: 1px solid red;
+  margin-bottom: 10px;
+
   div {
     display: flex;
     justify-content: center;

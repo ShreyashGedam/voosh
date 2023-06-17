@@ -14,6 +14,7 @@ export const Register = (props) => {
   const handleClickNormal = async () => {
     await axios
       .post("http://localhost:8080/user/adduser", {
+      // .post("https://tiny-jade-swordfish-cape.cyclic.app/user/adduser", {
         name,
         phone,
         password,

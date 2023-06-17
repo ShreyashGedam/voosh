@@ -32,7 +32,7 @@ app.use(express.json());
 
 app.use("/user", userRouter);
 app.use("/auth", router);
-// app.use(authenticate);
+app.use(authenticate);
 app.use("/order", orderRouter);
 
 app.listen(8080, () => {

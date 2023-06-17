@@ -27,6 +27,7 @@ const addOrder = async (req, res) => {
       user_id: user._id,
       phone: req.phone,
       total: req.body.total,
+      order_name: req.body.order_name
     });
     await neworder.save();
 
@@ -39,3 +40,6 @@ const addOrder = async (req, res) => {
   }
 };
 module.exports = { getorder, addOrder };
+
+
+// 8208306985
